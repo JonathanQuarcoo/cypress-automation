@@ -23,3 +23,18 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+Cypress.Commands.add('masInput', (data, assert = false) => {
+    for (const selector in data) {
+        if (Object.hasOwnProperty.call(data, selector)) {
+            cy.get(selector)
+                .as(`mass-[${selector}]`)
+                .clear()
+                .type(data[selector]);
+
+            if (assert) {
+                cy.get(`@mass-[${selector}]`).should("contain.value", data[selector]);
+            }
+        }
+    }
+})
